@@ -7,18 +7,18 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DAOManager {
+public class DAOManager implements AutoCloseable{
 
     //Private
     private DataSource src;
     private Connection con;
 
-    private DAOManager() throws Exception {
+    private DAOManager(){
         try {
             InitialContext ctx = new InitialContext();
             this.src = (DataSource) ctx.lookup("jndi/MYSQL");
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace(System.err);
         }
     }
 
@@ -27,26 +27,28 @@ public class DAOManager {
         return DAOManagerSingleton.INSTANCE.get();
     }
 
-    public void open() throws SQLException {
+    public void open() {
         try {
             if (this.con == null || this.con.isClosed())
                 this.con = src.getConnection();
         } catch (SQLException e) {
-            throw e;
+            e.printStackTrace(System.err);
         }
     }
 
-    public void close() throws SQLException {
+    @Override
+    public void close() {
         try {
             if (this.con != null && !this.con.isClosed())
                 this.con.close();
         } catch (SQLException e) {
-            throw e;
+            e.printStackTrace(System.err);
         }
     }
 
     public  DAO  getDAO(Table table) {
         DAO dao = null;
+        open();
         try {
             switch (table) {
                 case USERS:
@@ -55,7 +57,7 @@ public class DAOManager {
                     throw new SQLException("Trying to link to an unexistant table.");
             }
         } catch (SQLException e) {
-            System.out.println("dfsdf");
+            e.printStackTrace(System.err);
         }
         return dao;
     }
