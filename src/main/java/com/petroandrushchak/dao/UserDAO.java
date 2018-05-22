@@ -1,10 +1,9 @@
 package com.petroandrushchak.dao;
 
 import com.petroandrushchak.db.Table;
-import com.petroandrushchak.db.UserTrasformer;
+import com.petroandrushchak.db.UserTransformer;
 import com.petroandrushchak.model.User;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +23,7 @@ public class UserDAO extends DAO {
         try(PreparedStatement statement = con.prepareStatement(query);
             ResultSet result = statement.executeQuery();
         ) {
-            return UserTrasformer.getUsers(result);
+            return UserTransformer.getUsers(result);
 
         }catch (SQLException e){
             e.printStackTrace();

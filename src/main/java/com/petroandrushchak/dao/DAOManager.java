@@ -1,25 +1,19 @@
 package com.petroandrushchak.dao;
 
+import com.petroandrushchak.db.ConnectionManager;
 import com.petroandrushchak.db.Table;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DAOManager implements AutoCloseable{
 
-    //Private
-    private DataSource src;
     private Connection con;
 
     private DAOManager(){
-        try {
-            InitialContext ctx = new InitialContext();
-            this.src = (DataSource) ctx.lookup("jndi/MYSQL");
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
     }
 
 
@@ -30,7 +24,7 @@ public class DAOManager implements AutoCloseable{
     public void open() {
         try {
             if (this.con == null || this.con.isClosed())
-                this.con = src.getConnection();
+                this.con = ConnectionManager.getConnection();
         } catch (SQLException e) {
             e.printStackTrace(System.err);
         }
@@ -53,6 +47,7 @@ public class DAOManager implements AutoCloseable{
             switch (table) {
                 case USERS:
                     dao = new UserDAO(this.con);
+                    break;
                 default:
                     throw new SQLException("Trying to link to an unexistant table.");
             }

@@ -22,5 +22,6 @@ public class App {
 
         UserService userService = new UserService();
         List<User> users = userService.getAllUsers();
+        System.out.println(users);
     }
 }
