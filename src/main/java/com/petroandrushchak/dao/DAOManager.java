@@ -16,12 +16,11 @@ public class DAOManager implements AutoCloseable{
     private DAOManager(){
     }
 
-
     public static DAOManager getInstance() {
         return DAOManagerSingleton.INSTANCE.get();
     }
 
-    public void open() {
+    private void open() {
         try {
             if (this.con == null || this.con.isClosed())
                 this.con = ConnectionManager.getConnection();
@@ -60,7 +59,7 @@ public class DAOManager implements AutoCloseable{
 
     private static class DAOManagerSingleton {
 
-        public static final ThreadLocal<DAOManager> INSTANCE;
+        static final ThreadLocal<DAOManager> INSTANCE;
 
         static {
             ThreadLocal<DAOManager> dm;
@@ -75,7 +74,6 @@ public class DAOManager implements AutoCloseable{
                         }
                     }
                 };
-
 
             } catch (Exception e) {
                 dm = null;
